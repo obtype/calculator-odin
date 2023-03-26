@@ -32,7 +32,7 @@ function operate(num1, operator, num2){
 
 function equate(e){
     
-    let answer = operate(input1.value, operator, input2.value);
+    let answer = round(operate(input1.value, operator, input2.value).toString());
     if (answer === undefined){
         answer = '';
     }
@@ -79,6 +79,74 @@ function backspace(){
 
 }
 
+function round(num){
+
+    const significatDecimals = 3;
+
+    if(!num.includes('.')){
+        return num;
+    }
+
+    let arr = num.split('.');
+    if (arr[1].length <= 3){
+        return num;
+    }
+
+    let count = 0;
+
+    for(let i = 0; i < arr[1].length; i++){
+
+        if (arr[1][i] != 0){
+            break;
+        }
+        count++    
+    }
+    
+    let multiplier = Math.pow(10, significatDecimals + count)
+    num *= multiplier
+    num = Math.round(num);
+    num /= multiplier;
+
+    return num.toString();
+    
+}
+
+function numberEvent(e){
+    if(input1.state === 'active'){
+        input1.value += e.target.textContent;
+    }
+    else {  //if(input2.state === 'active')
+        input2.value += e.target.textContent;
+    }
+    displayValue += e.target.textContent;
+    displayBox.textContent = displayValue;
+    console.log(`input1 : ${input1.value}`);
+    console.log(`input2 : ${input2.value}`);
+
+}
+
+function operatorEvent(e){
+    if(operator !== ''){
+        let temp = round(operate(input1.value, operator, input2.value).toString());
+        input1.value = temp;
+        displayValue = temp + e.target.textContent;
+        input1.state = 'inactive';
+        input2.state = 'active';
+        input2.value = '';
+        displayBox.textContent = displayValue;
+        operator = e.target.textContent;
+        console.log(operator);
+    }
+    else{
+        operator = e.target.textContent;
+        displayValue += e.target.textContent;
+        displayBox.textContent = displayValue;
+        input1.state = 'inactive';
+        input2.state = 'active';
+        console.log(operator);
+    }
+}
+
 
 let input1, input2, operator, display;
 
@@ -88,7 +156,6 @@ input2 = {value: '', state: 'inactive'};
 displayValue = '';
 
 
-//console.log(operate(input1.value, operator, input2.value));
 
 
 const numericButtons = document.querySelectorAll('.numbers button');
@@ -101,44 +168,14 @@ const backspaceButton = document.querySelector('#backspace');
 
 
 numericButtons.forEach(node => {
-    node.addEventListener('click', e => {
-        if(input1.state === 'active'){
-            input1.value += e.target.textContent;
-        }
-        else {  //if(input2.state === 'active')
-            input2.value += e.target.textContent;
-        }
-        displayValue += e.target.textContent;
-        displayBox.textContent = displayValue;
-        console.log(`input1 : ${input1.value}`);
-        console.log(`input2 : ${input2.value}`);
-    })
-})
+    node.addEventListener('click', numberEvent)
+});
+
 
 operatorButtons.forEach(node => {
-    node.addEventListener('click', e => {
-        
-        if(operator !== ''){
-            let temp = operate(input1.value, operator, input2.value).toString();
-            input1.value = temp;
-            displayValue = temp + e.target.textContent;
-            input1.state = 'inactive';
-            input2.state = 'active';
-            input2.value = '';
-            displayBox.textContent = displayValue;
-            operator = e.target.textContent;
-            console.log(operator);
-        }
-        else{
-            operator = e.target.textContent;
-            displayValue += e.target.textContent;
-            displayBox.textContent = displayValue;
-            input1.state = 'inactive';
-            input2.state = 'active';
-            console.log(operator);
-        }
-    })
-})
+    node.addEventListener('click', operatorEvent)
+});
+
 
 equalButton.addEventListener('click', equate);
 
