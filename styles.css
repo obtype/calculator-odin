@@ -1,0 +1,27 @@
+body {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(216, 243, 252);
+
+}
+
+.calculator {
+    width: 40vh;
+    height: 70vh;
+    background-color: rgb(43, 68, 114);
+    padding: 10px;
+}
+
+.screen {
+    width: 80px;
+    height: 20px;
+    background-color: greenyellow;
+    padding: 10px;
+    margin: 5px;
+}
+
+.buttons {
+    width: 90%;
+    height: 80%;
+}
